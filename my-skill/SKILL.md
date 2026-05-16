@@ -1,4 +1,4 @@
-# Project Overview: Hackathon-Final
+# Project Overview: Hackathon
 
 This repository houses a comprehensive, dual-sided marketplace solution consisting of two distinct full-stack applications: **Seller** and **Buyer**. The ecosystem is designed to bridge the gap between merchants and customers by leveraging AI for frictionless product listing and dynamic localization.
 
