@@ -36,3 +36,35 @@ The Buyer application provides a deeply localized, user-friendly storefront for 
 2. **Request:** A buyer opens the Buyer Frontend in their native language (e.g., Hindi) and requests the product feed.
 3. **Internal Sync:** The Buyer Backend (`:8091`) fetches the raw (English) product list from the Seller Backend (`:8090`).
 4. **Translation & Caching:** The Buyer Backend checks its concurrent cache for each product. If a Hindi translation is missing, it calls the translation endpoint to translate the product data, caches the result to prevent future redundant calls, and finally serves the localized catalog to the buyer.
+
+## Error Handling & Fallbacks
+
+| Failure | Fallback |
+|---|---|
+| LLM API timeout | Return cached translation if exists, else show English with warning banner |
+| Speech recognition error | Show raw transcript, let seller manually edit before AI processing |
+| Profanity detected | Field left blank, orange border, "Re-record" prompt — never silently passed |
+| Noisy audio / empty transcript | Mic shows "Couldn't hear clearly" — no API call made |
+
+## Cost Reality
+"Near zero marginal cost" applies to buyer-side reads served from cache. Seller-side write = 1 LLM call per product per language. At 10K new products/day × 7 languages = ~70K API calls/day, within Claude batch pricing.
+
+## Tradeoffs Considered
+
+| Decision | Alternative Rejected | Why |
+|---|---|---|
+| Go/Gin backend | Node.js | Lower memory, native goroutines for concurrent cache |
+| BFF pattern | Single monolith | Seller/buyer concerns diverge — separate deployability |
+| Web Speech API | Whisper self-hosted | No GPU in hackathon infra |
+| Claude for post-processing | IndicTrans2 only | Pure translation = literal; Claude = B2B-toned summary |
+| In-memory cache (sync.RWMutex) | Redis | Simpler for hackathon; Redis is the prod upgrade path |
+
+## Assumptions & Non-Goals
+- v1 targets 7 languages; languages 8-22 are architecture-ready, gated behind IndicTrans2 model addition only
+- Arabic RTL tested in Chrome; GCC market = UI only, no regulatory compliance claimed
+- Listing score recalculates client-side on: name ≥3 words, description ≥100 chars, photo uploaded, PDF uploaded, price filled — mirrors IndiaMART's documented Product Score criteria
+
+## Team Ownership
+- Backend (Go/Gin, BFF, caching): [Name 1]
+- Frontend (React/TS, mic, product score): [Name 2]
+- Claude prompts, multilingual QA, demo: [Name 3]
