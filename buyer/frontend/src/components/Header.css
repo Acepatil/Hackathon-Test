@@ -1,0 +1,125 @@
+.header {
+  background-color: var(--primary-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 20px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.logo-icon {
+  background-color: white;
+  color: #e53935;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-family: serif;
+}
+
+.header-search-container {
+  display: flex;
+  flex: 1;
+  background: white;
+  border-radius: 4px;
+  height: 40px;
+  overflow: hidden;
+  margin: 0 20px;
+}
+
+.location-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  color: var(--text-dark);
+  font-size: 14px;
+  border-right: 1px solid var(--border-color);
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  color: #999;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.search-btn {
+  background-color: var(--primary-teal);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 24px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.search-btn:hover {
+  background-color: var(--teal-hover);
+}
+
+.post-rfq-btn {
+  background-color: white;
+  color: var(--primary-blue);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.post-rfq-btn:hover {
+  transform: translateY(-2px);
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 12px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.nav-item:hover {
+  opacity: 1;
+}

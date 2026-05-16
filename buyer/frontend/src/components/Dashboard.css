@@ -1,0 +1,30 @@
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-body {
+  display: flex;
+  flex: 1;
+}
+
+.dashboard-main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  max-width: calc(100vw - 260px);
+}
+
+.dashboard-top-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-top-row {
+    grid-template-columns: 1fr;
+  }
+}
