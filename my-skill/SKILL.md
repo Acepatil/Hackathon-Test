@@ -1,86 +1,38 @@
+# Project Overview: Hackathon-Final
+
+This repository houses a comprehensive, dual-sided marketplace solution consisting of two distinct full-stack applications: **Seller** and **Buyer**. The ecosystem is designed to bridge the gap between merchants and customers by leveraging AI for frictionless product listing and dynamic localization.
+
+## 1. Seller Full-Stack Application
+
+The Seller application empowers merchants with an AI-driven, effortless experience to list and manage their inventory.
+
+### **Features & Capabilities:**
+- **Voice-to-Product Listing (`/process-speech`):** Sellers can simply speak to describe their products. The system uses LLMs to process the speech, understand the context, and extract necessary product details.
+- **Smart Specification Suggestions (`/suggest-specs`):** Automatically suggests relevant specifications and metadata based on the product description to ensure rich cataloging.
+- **Product Management:** Full CRUD (Create, Read, Update, Delete) capabilities for managing the product catalog.
+- **Shared LLM Services:** Exposes a translation endpoint (`/buyer/translate`) utilized by the buyer platform to localize product data.
+
+### **Tech Stack:**
+- **Backend:** Built with **Go** and the **Gin** web framework. Runs on port `8090`.
+- **Integrations:** Integrates deeply with LLMs for speech processing, data extraction, and translation.
+
 ---
-name: hackathon-skill-package-validator
-description: "Use this skill when you want to package the buyer/seller marketplace into a hackathon-ready skill submission, validate its canonical layout, and generate a concrete submission report."
----
 
-# Skill: Hackathon Skill Package Validator
+## 2. Buyer Full-Stack Application
 
-Use this skill when you want to verify that a hackathon skill artifact follows the canonical submission checklist and produces a measurable report.
+The Buyer application provides a deeply localized, user-friendly storefront for customers to browse products in their native language.
 
-## What this skill does
+### **Features & Capabilities:**
+- **Multilingual Support:** Buyers can view the entire product catalog in multiple Indian regional languages, including English, Hindi, Tamil, Telugu, Gujarati, Bengali, and Marathi (`en-IN`, `hi-IN`, `ta-IN`, etc.).
+- **Real-Time Dynamic Translation:** The backend intercepts product data from the seller platform and dynamically translates the names, descriptions, and specifications into the buyer's preferred language.
+- **Intelligent Caching System:** Implements a robust, concurrent in-memory caching mechanism (`translationCache` with `sync.RWMutex`) to store previously translated products. This significantly minimizes external API calls, reduces latency, and handles translation failures gracefully.
 
-This skill package validates the repository against the hackathon rubric for skill artefacts. It checks for:
+### **Tech Stack:**
+- **Frontend:** Modern SPA built with **React**, **TypeScript**, and **Vite**.
+- **Backend:** Built with **Go** and the **Gin** web framework. Runs on port `8091`. Functions as a Backend-For-Frontend (BFF), communicating with the Seller API to retrieve and translate product catalogs.
 
-- `SKILL.md` with YAML frontmatter and an activation selector
-- canonical folders: `scripts/`, `references/`, `assets/`
-- at least one runnable automation script
-- bundled assets and reference documentation
-- measurable output in the form of a generated report
-
-It also documents how the package maps to axis 5 (skills.md quality), axis 4 (robustness), and axis 3 (completeness).
-
-## How to use
-
-1. Run the validation script:
-
-```bash
-python3 scripts/validate_skill_pack.py
-```
-
-2. Inspect the generated report:
-
-```bash
-less assets/skill_submission_report.md
-```
-
-3. Use the references for rubric alignment:
-
-- `references/domain-rules.md`
-- `references/output-schema.md`
-- `references/second-workflow-walkthrough.md`
-
-## Repository context
-
-This repository contains two separate full-stack marketplace applications:
-
-- `buyer/` — the buyer-facing marketplace application with a React/TypeScript/Vite frontend and a Go backend BFF that fetches, translates, caches, and serves localized product catalogs.
-- `seller/` — the seller-facing application with a Go backend and a merchant-facing frontend for voice-driven product listing, smart spec suggestion, and product management.
-
-The validation workflow in this skill package targets the repository packaging, while the buyer/seller apps remain the core product logic under `buyer/` and `seller/`.
-
-## Files in this package
-
-- `SKILL.md` — canonical skill entrypoint with metadata and usage guidance
-- `scripts/validate_skill_pack.py` — runnable checker that generates a report
-- `assets/report-template.md` — report scaffold used by the script
-- `references/output-schema.md` — documented output format for the generated report
-- `references/second-workflow-walkthrough.md` — reuse story for a second workflow
-- `references/domain-rules.md` — rubric-aligned submission guidance
-
-## Application folders
-
-- `buyer/` — buyer marketplace full-stack application
-- `seller/` — seller marketplace full-stack application
-
-## Outputs
-
-- `assets/skill_submission_report.md` — a measurable, shareable markdown report that captures package validation state.
-
-## Environment Variables
-
-- None required for this validation skill.
-- If the skill is extended to include external integrations, add each secret and API key here.
-
-## Why this maps to the rubric
-
-- Axis 5 (`Skilled Solution?`) — professional-grade package structure, explicit activation statement, and clear documentation.
-- Axis 4 (`Solution Robustness`) — contains a real script with deterministic validation logic and concrete output.
-- Axis 3 (`Solution Completeness`) — includes a complete submission workflow, references, and cross-workflow reuse guidance.
-
-## Suggested demo narrative
-
-1. Show the problem: packaging hackathon submission quality.
-2. Explain the skill: load `SKILL.md`, run `scripts/validate_skill_pack.py`, inspect output.
-3. Run the script live, including a negative input if a folder is missing.
-4. Show reuse: the same validator also works for evaluating another skill submission.
-5. Highlight the measurable output: `assets/skill_submission_report.md`.
+## System Architecture & Data Flow
+1. **Creation:** A seller uses the frontend to dictate a product description. The Seller Backend processes this speech, generates product specs, and saves the product to the central store.
+2. **Request:** A buyer opens the Buyer Frontend in their native language (e.g., Hindi) and requests the product feed.
+3. **Internal Sync:** The Buyer Backend (`:8091`) fetches the raw (English) product list from the Seller Backend (`:8090`).
+4. **Translation & Caching:** The Buyer Backend checks its concurrent cache for each product. If a Hindi translation is missing, it calls the translation endpoint to translate the product data, caches the result to prevent future redundant calls, and finally serves the localized catalog to the buyer.
