@@ -64,7 +64,3 @@ The Buyer application provides a deeply localized, user-friendly storefront for 
 - Arabic RTL tested in Chrome; GCC market = UI only, no regulatory compliance claimed
 - Listing score recalculates client-side on: name ≥3 words, description ≥100 chars, photo uploaded, PDF uploaded, price filled — mirrors IndiaMART's documented Product Score criteria
 
-## Team Ownership
-- Backend (Go/Gin, BFF, caching): [Name 1]
-- Frontend (React/TS, mic, product score): [Name 2]
-- Claude prompts, multilingual QA, demo: [Name 3]
